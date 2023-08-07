@@ -4,19 +4,85 @@
     let icons = Object.values(WeatherIcons);
 </script>
 
-<h1>Stargaze</h1>
+<div class="wrapper">
+    <div class="content">
+        <section class="current">
+            <div class="now">
+                NOW
+            </div>
+            <div class="hourly">
+                SOON
+            </div>  
+        </section>
+        <section class="forecast">
 
-{#each icons as icon}
-    <img src={ICON_PATH + icon}>
-{/each}
+        </section>
+    </div>
+</div>
+
+
+
 
 
 <style lang="scss">
-    body {
-        background-color: black;
+    @use "/src/lib/style.scss";
+    .wrapper {
+        overflow: scroll;
+        height: 100vh;
+        scroll-snap-type: x mandatory;
     }
-    img {
-        image-rendering: pixelated;
-        height: 62px;
+
+    .content {
+        display: flex;
+        width: calc(2 * 100vw);
+        height: 100vh;
     }
+
+    .current {
+        scroll-snap-align: start;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        .now {
+            flex: 1;
+            background-color: green;
+        }
+        .hourly {
+            flex: 1;
+            background-color: blue;
+        }
+    }
+
+    .forecast {
+        scroll-snap-align: start;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        background-color: blueviolet;
+        overflow-y: scroll;
+    }
+
+    @media (min-width: style.$medium) {
+        .content {
+            width: 100vw;
+        }
+
+        .current {
+            flex: 1;
+            
+        }
+        .forecast { 
+            flex: 1;
+        }
+    }
+
+    @media (min-width: style.$large) {
+        .current {
+            flex: 2;
+        }
+        .forecast {
+            flex: 1;
+        }
+    }
+   
 </style>
