@@ -1,5 +1,29 @@
 // Screen break sizes
-$small: 350px;
+$small: 400px;
 $medium: 600px;
 $large: 800px;
-$xlarge: 1000px;
+$xlarge: 1100px;
+
+@media (max-width: calc($small - 1px)) {
+    .hide-at-xs {
+        display: none !important;
+    }
+}
+
+@media (max-width: calc($medium - 1px)) {
+    .hide-at-sm {
+        display: none !important;
+    }
+}
+
+@media (max-width: calc($large - 1px)) {
+    .hide-at-md {
+        display: none !important;
+    }
+}
+
+@media (max-width: calc($xlarge - 1px)) {
+    .hide-at-lg {
+        display: none !important;
+    }
+}
