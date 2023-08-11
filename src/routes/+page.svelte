@@ -1,7 +1,7 @@
 <script lang="ts">
-	import DayForecast from "$lib/components/day-forecast.svelte";
-	import HourForecast from "$lib/components/hour-forecast.svelte";
-    import { getIcon, type Weather } from "../weather";
+	import DayForecast from "$lib/weather/day-forecast.svelte";
+	import HourForecast from "$lib/weather/hour-forecast.svelte";
+    import { getIcon, type Weather } from "$lib/weather/weather";
 
     let testWeather: Weather = {
         description: "Clear Skies",

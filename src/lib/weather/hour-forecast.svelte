@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getIcon, type Weather } from "../../weather";
+	import { getIcon, type Weather } from "./weather";
 
 
     export let hour: number;
