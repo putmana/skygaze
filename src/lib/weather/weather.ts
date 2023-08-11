@@ -26,11 +26,17 @@ export enum WeatherIcon {
 export type Weather = {
     description: string;
     code: number;
-    highTemp: number;
-    lowTemp: number;
-    time: number;
-    day: "SUN" | "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
+    temp: number;
+    feelsLike?: number;
+    lowTemp?: number;
+    time?: number;
+    day?: number;
+    unit: "K" | "C" | "F";
     isNight: boolean;
+}
+
+export function checkIfNight(time: number, sunrise: number, sunset: number) {
+    return (time > sunrise && time < sunset) ? false : true;
 }
 
 export function getIcon(weatherCode: number, night: boolean, low = false): string {
@@ -43,6 +49,19 @@ export function getIcon(weatherCode: number, night: boolean, low = false): strin
     }
 
     return path;
+}
+
+export function convertTemp(degK: number, unit: "K" | "C" | "F"): number {
+    // Keep as Kelvin and return rounded number with unit.
+    if (unit == "K") return Math.round(degK);
+    
+    // Convert to Celsius and return rounded number with unit.
+    const degC = degK - 273.15;
+    if (unit == "C") return Math.round(degC);
+
+    // Convert to Fahrenheit and return rounded number with unit.
+    const degF = (degC * 9/5) + 32;
+    return Math.round(degF);
 }
 
 // Maps the weather codes from OpenWeatherMap to Stargaze's weather icons

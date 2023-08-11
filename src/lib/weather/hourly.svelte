@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { getIcon, type Weather } from "./weather";
-
+	import { convertTemp, getIcon, type Weather } from "./weather";
 
     export let hour: number;
     export let weather: Weather;
@@ -9,7 +8,9 @@
         const AM = "AM";
         const PM = "PM";
         if (time === 0) {
-            return "12 AM";
+            return "12AM";
+        } else if (time === 12) {
+            return "12PM";
         } else if (time < 12) {
             return time.toString() + AM;
         } else if (time < 24) {
@@ -24,11 +25,11 @@
 
 <div class="wrapper">
     <h2 class="hour">
-        {formatTime(hour)}
+        {formatTime(weather.time ?? 0)}
     </h2>
     <img class="icon" src={getIcon(weather.code, weather.isNight, true)} alt={getIcon(weather.code, weather.isNight, true)}>
     <h2 class="temp">
-        {weather.highTemp}&degF
+        {convertTemp(weather.temp, weather.unit)}&deg{weather.unit}
     </h2>
 </div>
 

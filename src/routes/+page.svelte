@@ -1,52 +1,68 @@
 <script lang="ts">
-	import DayForecast from "$lib/weather/day-forecast.svelte";
-	import HourForecast from "$lib/weather/hour-forecast.svelte";
-    import { getIcon, type Weather } from "$lib/weather/weather";
+	import Daily from "$lib/weather/daily.svelte";
+	import DayForecast from "$lib/weather/daily.svelte";
+	import Hourly from "$lib/weather/hourly.svelte";
+	import HourForecast from "$lib/weather/hourly.svelte";
+    import { tempUnit } from "$lib/stores.js";
+	import Current from "$lib/weather/current.svelte";
 
-    let testWeather: Weather = {
-        description: "Clear Skies",
-        code: 800,
-        highTemp: 84,
-        lowTemp: 65,
-        isNight: false,
-        time: 3,
-        day: "SUN"
+    import { checkIfNight, type Weather } from "$lib/weather/weather";
+
+    export let data;
+
+    let current: Weather = {
+        description: data.current.weather[0].description,
+        code: data.current.weather[0].id,
+        temp: data.current.temp,
+        feelsLike: data.current.feels_like,
+        isNight: checkIfNight(data.current.dt, data.current.sunrise, data.current.sunset),
+        unit: $tempUnit
+    }
+    
+    let hourly: Weather[] = [];
+    for (let i = 1; i < 6; i++) {
+        let hour = data.hourly[i];
+        hourly.push({
+            description: hour.weather[0].description,
+            code: hour.weather[0].id,
+            temp: hour.temp,
+            time: new Date(hour.dt * 1000).getHours(),
+            isNight: checkIfNight(hour.dt, data.current.sunrise, data.current.sunset),
+            unit: $tempUnit
+        })
     }
 
+    let daily: Weather[] = [];
+    for (let i = 0; i < 7; i++) {
+        let day = data.daily[i];
+        daily.push({
+            description: day.weather[0].description,
+            code: day.weather[0].id,
+            temp: day.temp.max,
+            lowTemp: day.temp.min,
+            day: new Date(day.dt * 1000).getDay(),
+            isNight: false,
+            unit: $tempUnit
+        })
+    }
+    
 </script>
 
 <div class="wrapper">
     <div class="content">
         <section class="current">
-            <div class="now">
-                <h3>
-                    Billings, MT
-                </h3>
-                <img src={getIcon(771, false)}>
-                <h2>
-                    Squalls - 74&degF
-                </h2>
-                <h3>
-                    Feels like 72&degF
-                </h3>
-            </div>
+            <Current weather={current}/>
+
             <div class="hourly">
-                <HourForecast weather={testWeather} hour={4}/>
-                <HourForecast weather={testWeather} hour={5}/>
-                <HourForecast weather={testWeather} hour={6}/>
-                <HourForecast weather={testWeather} hour={7}/>
-                <HourForecast weather={testWeather} hour={8}/>
+                {#each hourly as hour}
+                    <Hourly weather={hour} hour={2}/>
+                {/each}
             </div>  
         </section>
         <section class="forecast">
-            <DayForecast weather={testWeather} day="MON"/>
-            <DayForecast weather={testWeather} day="TUE"/>
-            <DayForecast weather={testWeather} day="WED"/>
-            <DayForecast weather={testWeather} day="THU"/>
-            <DayForecast weather={testWeather} day="FRI"/>
-            <DayForecast weather={testWeather} day="SAT"/>
-            <DayForecast weather={testWeather} day="SUN"/>
-
+            {#each daily as day}
+                <Daily weather={day} />
+            {/each}
         </section>
     </div>
 </div>
@@ -75,26 +91,7 @@
         flex: 1;
         flex-direction: column;
         background-color: #3aa1d5;
-        .now {
-            display: flex;
-            flex-direction: column;
-            flex: 2;
-            justify-content: center;
-            margin-bottom: 32px;
-            align-items: center;
-            img {
-                height: 128px;
-                width: 128px;
-            }
-            h2 {
-                font-size: 20pt;
-                margin: 2px;
-            }
-            h3 {
-                font-size: 14pt;
-                margin: 10px;
-            }
-        }
+
         .hourly {
             display: flex;
             gap: 8px;
@@ -130,7 +127,8 @@
         }
         .forecast {
             border-left: 6px solid rgba(255, 255, 255, 75%);
-            flex: 1;
+            flex-grow: 0;
+            flex-basis: auto;
         }
     }
     @media (min-width: style.$xlarge) {
@@ -151,6 +149,7 @@
         }
         .forecast {
             flex-grow: 0;
+            flex-basis: auto;
         }
     }
    
