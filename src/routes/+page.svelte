@@ -6,17 +6,26 @@
     import { tempUnit } from "$lib/stores.js";
 	import Current from "$lib/weather/current.svelte";
 
-    import { checkIfNight, type Weather } from "$lib/weather/weather";
+    import { checkIfNight, formatDay, formatTime, type Weather } from "$lib/weather/weather";
 
     export let data;
+    console.log(data);
+
+    let now = data.current;
+    let night = (now.dt > now.sunrise && now.dt < now.sunset) ? false : true;
+    let clouds = (now.clouds > 50)
 
     let current: Weather = {
-        description: data.current.weather[0].description,
-        code: data.current.weather[0].id,
-        temp: data.current.temp,
-        feelsLike: data.current.feels_like,
-        isNight: checkIfNight(data.current.dt, data.current.sunrise, data.current.sunset),
-        unit: $tempUnit
+        description: now.weather[0].description,
+        code: now.weather[0].id,
+        temp: now.temp,
+        feelsLike: now.feels_like,
+        isNight: checkIfNight(now.dt, now.sunrise,now.sunset),
+        unit: $tempUnit,
+        sunrise: formatTime(now.sunrise),
+        sunset: formatTime(now.sunset),
+        clouds: now.clouds + "%",
+        humidity: now.humidity + "%"
     }
     
     let hourly: Weather[] = [];
@@ -26,8 +35,8 @@
             description: hour.weather[0].description,
             code: hour.weather[0].id,
             temp: hour.temp,
-            time: new Date(hour.dt * 1000).getHours(),
-            isNight: checkIfNight(hour.dt, data.current.sunrise, data.current.sunset),
+            time: formatTime(hour.dt, false),
+            isNight: checkIfNight(hour.dt, now.sunrise, now.sunset),
             unit: $tempUnit
         })
     }
@@ -40,15 +49,16 @@
             code: day.weather[0].id,
             temp: day.temp.max,
             lowTemp: day.temp.min,
-            day: new Date(day.dt * 1000).getDay(),
+            day: formatDay(day.dt),
             isNight: false,
             unit: $tempUnit
         })
     }
+
     
 </script>
 
-<div class="wrapper">
+<div class="wrapper" class:night class:clouds>
     <div class="content">
         <section class="current">
             <Current weather={current}/>
@@ -77,6 +87,18 @@
         overflow-x: scroll;
         height: 100vh;
         scroll-snap-type: x mandatory;
+        background-color: #3aa1d5;
+        &.clouds {
+            background-color: #7c8c9a;
+        }
+        &.night {
+            background-color: #262b49;
+            &.clouds {
+                background-color: #2d2e34;
+            }
+        }
+
+        
     }
 
     .content {
@@ -90,7 +112,6 @@
         display: flex;
         flex: 1;
         flex-direction: column;
-        background-color: #3aa1d5;
 
         .hourly {
             display: flex;
@@ -98,7 +119,6 @@
             flex-direction: row;
             padding-top: 16px;
             padding-bottom: 16px;
-            border-top: 6px solid rgba(255, 255, 255, 75%);
             background-color: rgba(0, 0, 0, 20%);
         }
     }
@@ -126,11 +146,11 @@
             }
         }
         .forecast {
-            border-left: 6px solid rgba(255, 255, 255, 75%);
             flex-grow: 0;
             flex-basis: auto;
         }
     }
+
     @media (min-width: style.$xlarge) {
         .current {
             flex-grow: 1;

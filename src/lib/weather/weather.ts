@@ -29,10 +29,14 @@ export type Weather = {
     temp: number;
     feelsLike?: number;
     lowTemp?: number;
-    time?: number;
-    day?: number;
+    time?: string;
+    day?: string;
     unit: "K" | "C" | "F";
     isNight: boolean;
+    sunrise?: string;
+    sunset?: string;
+    clouds?: string;
+    humidity?: string;
 }
 
 export function checkIfNight(time: number, sunrise: number, sunset: number) {
@@ -49,6 +53,43 @@ export function getIcon(weatherCode: number, night: boolean, low = false): strin
     }
 
     return path;
+}
+
+// If showMinutes = true, time will return as 12:34 AM. 
+// If showMinutes = false, time it will return 12 AM.
+export function formatTime(secs: number, showMinutes = true): string {
+    
+    // Convert OWM API seconds to milliseconds and create a Date object
+    const time = new Date(secs * 1000);
+    
+    const hours = time.getHours();
+
+    // Get suffix
+    const suffix = (hours > 11) ? "PM" : "AM";
+
+    // Convert from 24 hour time to 12 hour time
+    let formattedHours = (hours % 12);
+    if (formattedHours == 0) formattedHours = 12;
+
+    // Return time without minutes if showMinutes == false
+    if (showMinutes == false) return formattedHours + " " + suffix;
+
+    // Format minutes as a string with leading zero if needed
+    const minutes = time.getMinutes();
+    const formattedMinutes = (minutes < 10) ? "0" + minutes.toString() : minutes.toString()
+
+    // Return time with minutes if showMinutes == true
+    return formattedHours + ":" + formattedMinutes + " " + suffix;
+}
+
+export function formatDay(secs: number): string {
+    const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+
+    // Convert OWM API seconds to milliseconds and create a Date object, and get the day of the week
+    const day = new Date(secs * 1000).getDay()
+
+    // Return the day of the week
+    return DAYS[day];
 }
 
 export function convertTemp(degK: number, unit: "K" | "C" | "F"): number {

@@ -5,7 +5,7 @@ import testData from '$lib/weather/data.json' assert {type: 'json'};
 // from a local JSON file rather than the OpenWeatherMap API.
 // This will (hopefully) prevent me from accidentally 
 // setting my wallet on fire.
-const DEBUG = true;
+const DEBUG = false;
 
 // Billings, MT
 const DEFAULT_LOCATION = "45.78,-108.50";

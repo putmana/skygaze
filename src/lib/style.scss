@@ -1,7 +1,7 @@
 // Screen break sizes
-$small: 400px;
-$medium: 600px;
-$large: 800px;
+$small: 450px;
+$medium: 700px;
+$large: 900px;
 $xlarge: 1100px;
 
 @media (max-width: calc($small - 1px)) {
@@ -25,5 +25,16 @@ $xlarge: 1100px;
 @media (max-width: calc($xlarge - 1px)) {
     .hide-at-lg {
         display: none !important;
+    }
+}
+
+// Removes the top and bottom spacing from text
+@mixin lhCrop($line-height) {
+    &::before {
+        content: '';
+        display: block;
+        height: 0;
+        width: 0;
+        margin-top: calc((1 - #{$line-height}) * 0.5em);
     }
 }

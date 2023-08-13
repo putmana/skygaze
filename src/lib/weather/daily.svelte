@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { convertTemp, getIcon, type Weather } from "./weather";
 
-    let days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 	export let weather: Weather;
 
 </script>
 
 <div class="wrapper">
     <h2 class="day">
-        {days[weather.day ?? 0]}
+        {weather.day}
     </h2>
     <span class="temps">
         <h3 class="high">{convertTemp(weather.temp, weather.unit)}&deg{weather.unit}</h3>
@@ -22,9 +21,9 @@
     @use "/src/lib/style.scss";
 
     .wrapper {
-        margin-left: 16px;
-        margin-right: 16px;
-        gap: 24px;
+        margin-left: 32px;
+        margin-right: 32px;
+        gap: 16px;
         display: flex;
         flex: 1;
         align-items: center;
@@ -61,6 +60,7 @@
 
     @media (min-width: style.$small) {
         .wrapper {
+            gap: 24px;
             .day {
                 font-size: 12pt;
             }
@@ -81,6 +81,7 @@
 
     @media (min-width: style.$xlarge) {
         .wrapper {
+            gap: 32px;
             .day {
                 font-size: 14pt;
             }
