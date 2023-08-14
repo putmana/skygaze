@@ -1,176 +1,117 @@
 <script lang="ts">
-	import Daily from "$lib/weather/daily.svelte";
-	import DayForecast from "$lib/weather/daily.svelte";
-	import Hourly from "$lib/weather/hourly.svelte";
-	import HourForecast from "$lib/weather/hourly.svelte";
-    import { tempUnit } from "$lib/stores.js";
-	import Current from "$lib/weather/current.svelte";
+	import { goto } from "$app/navigation";
+	import type { ActionData, PageData } from "./$types";
+    import { location } from "$lib/stores";
+	import { formatName, stringifyLocation } from "$lib/location/location";
 
-    import { checkIfNight, formatDay, formatTime, type Weather } from "$lib/weather/weather";
+    export let data: PageData;
+    export let form: ActionData;
 
-    export let data;
-    console.log(data);
+    let success = false;
 
-    let now = data.current;
-    let night = (now.dt > now.sunrise && now.dt < now.sunset) ? false : true;
-    let clouds = (now.clouds > 50)
-
-    let current: Weather = {
-        description: now.weather[0].description,
-        code: now.weather[0].id,
-        temp: now.temp,
-        feelsLike: now.feels_like,
-        isNight: checkIfNight(now.dt, now.sunrise,now.sunset),
-        unit: $tempUnit,
-        sunrise: formatTime(now.sunrise),
-        sunset: formatTime(now.sunset),
-        clouds: now.clouds + "%",
-        humidity: now.humidity + "%"
-    }
-    
-    let hourly: Weather[] = [];
-    for (let i = 1; i < 6; i++) {
-        let hour = data.hourly[i];
-        hourly.push({
-            description: hour.weather[0].description,
-            code: hour.weather[0].id,
-            temp: hour.temp,
-            time: formatTime(hour.dt, false),
-            isNight: checkIfNight(hour.dt, now.sunrise, now.sunset),
-            unit: $tempUnit
-        })
-    }
-
-    let daily: Weather[] = [];
-    for (let i = 0; i < 7; i++) {
-        let day = data.daily[i];
-        daily.push({
-            description: day.weather[0].description,
-            code: day.weather[0].id,
-            temp: day.temp.max,
-            lowTemp: day.temp.min,
-            day: formatDay(day.dt),
-            isNight: false,
-            unit: $tempUnit
-        })
-    }
-
-    
 </script>
 
-<div class="wrapper" class:night class:clouds>
-    <div class="content">
-        <section class="current">
-            <Current weather={current}/>
+<main>
+    <section class="header">
+        <h1>Choose Location</h1>
+    </section>
+    <section class="forms">
 
-            <div class="hourly">
-                {#each hourly as hour}
-                    <Hourly weather={hour} hour={2}/>
+        <form class="search" method="POST" action="?/queryLocation">
+            <input type="text" id="query" name="query" placeholder="City or Region" required>
+            <input type="submit">
+        </form>
+        {#if form?.success === true}
+            <form method="POST" action="?/setLocation">
+                {#each form?.data as result, index}
+                <input class="radio" type="radio" id={index.toString()} name="location" value={stringifyLocation({name: formatName(result.name, result.country, result.state), lat: result.lat, lon: result.lon})} required>
+                <label for={index.toString()}>{formatName(result.name, result.country, result.state)}</label>
                 {/each}
-            </div>  
-        </section>
-        <section class="forecast">
-            {#each daily as day}
-                <Daily weather={day} />
-            {/each}
-        </section>
-    </div>
-</div>
-
-
-
-
-
+                <input class="button" type="submit" value="Choose Location">
+                
+            </form>
+        {:else if form?.success === false}
+            <h3>{form.data}</h3>
+        {/if}
+    </section>
+</main>
+    
 <style lang="scss">
-    @use "/src/lib/style.scss";
-    .wrapper {
-        overflow-x: scroll;
-        height: 100vh;
-        scroll-snap-type: x mandatory;
-        background-color: #3aa1d5;
-        &.clouds {
-            background-color: #7c8c9a;
-        }
-        &.night {
-            background-color: #262b49;
-            &.clouds {
-                background-color: #2d2e34;
-            }
-        }
-
-        
-    }
-
-    .content {
+    @use '/src/lib/style.scss';
+    main {
+        background-color: #222222;
         display: flex;
-        width: calc(2 * 100vw);
-        height: 100vh;
-    }
-
-    .current {
-        scroll-snap-align: start;
-        display: flex;
-        flex: 1;
         flex-direction: column;
-
-        .hourly {
+        justify-content: center;
+        height: 100vh;
+        align-items: center;
+        .header {
+            
+            flex: 3;
             display: flex;
-            gap: 8px;
-            flex-direction: row;
-            padding-top: 16px;
-            padding-bottom: 16px;
-            background-color: rgba(0, 0, 0, 20%);
-        }
-    }
-
-    .forecast {
-        scroll-snap-align: start;
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        background-color: rgba(0, 0, 0, 50%);
-    }
-
-    @media (min-width: style.$large) {
-        .wrapper {
-            overflow-x: hidden;
-            scroll-snap-type: none;
-        }
-        .content {
-            width: 100vw;
-        }
-        .current {
-            flex: 2;
-            .hourly {
-                flex-direction: row;
+            justify-content: center;
+            align-items: end;
+            h1 {
+                font-size: 32pt;
+                font-weight: normal;
+                margin: 0;
+                line-height: 1;
+                @include style.lhCrop(1.5);
+                margin: 24px;
+            }
+            img {
+                height: 96px;
+                width: 96px;
             }
         }
-        .forecast {
-            flex-grow: 0;
-            flex-basis: auto;
-        }
-    }
-
-    @media (min-width: style.$xlarge) {
-        .current {
-            flex-grow: 1;
-            .now {
-                h2 {
-                    font-size: 30pt;
+        .forms {
+            flex: 5;
+            form {
+                width: 400px;
+                display: flex;
+                flex-direction: column;
+                input[type=submit] {
+                    padding: 12px;
+                    background-color: rgba(255, 255, 255, 0.10);
+                    border: 2px solid white;
+                    text-align: center;
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.50);
+                    }
                 }
-                h3 {
-                    font-size: 16pt;
+                &.search {
+                    flex-direction: row;
+                    input[type=text] {
+                        flex-grow: 1;
+                        border-right: none;
+                    }
+                    
                 }
-                img {
-                    width: 192px;
-                    height: 192px;
+                
+            }
+            input {
+                &.radio {
+                    visibility: hidden;
+                }
+                &.radio:checked + label {
+                    background-color: rgba(255, 255, 255, 0.4);
+                }
+            }
+            label {
+                padding: 12px;
+                padding-top: 16px;
+                padding-bottom: 16px;
+                box-sizing: border-box;
+                text-align: center;
+                line-height: 1;
+                border-left: 2px solid white;
+                border-right: 2px solid white;
+                @include style.lhCrop(1.5);
+                &:hover {
+                    background-color: rgba(255, 255, 255, 20%);
+                    
                 }
             }
         }
-        .forecast {
-            flex-grow: 0;
-            flex-basis: auto;
-        }
     }
-   
 </style>

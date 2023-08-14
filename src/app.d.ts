@@ -8,6 +8,11 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
+	type Geocode = {
+		name: string,
+		lat: number,
+		lon: number
+	}
 	
 }
 

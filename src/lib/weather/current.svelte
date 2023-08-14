@@ -49,6 +49,7 @@ import { convertTemp, getIcon, type Weather } from "./weather";
         margin: 24px;
         flex-direction: column;
         flex-grow: 1;
+        min-height: 60vh;
         
         .header {
             display: flex;
@@ -116,7 +117,7 @@ import { convertTemp, getIcon, type Weather } from "./weather";
         }
     }
 
-    @media (min-width: style.$xlarge) {
+    @media (min-width: style.$large) {
         .wrapper {
             justify-content: space-evenly;
             align-items: center;

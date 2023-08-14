@@ -1,8 +1,8 @@
 // Screen break sizes
 $small: 450px;
 $medium: 700px;
-$large: 900px;
-$xlarge: 1100px;
+$large: 1100px;
+$xlarge: 1300px;
 
 @media (max-width: calc($small - 1px)) {
     .hide-at-xs {
@@ -36,5 +36,18 @@ $xlarge: 1100px;
         height: 0;
         width: 0;
         margin-top: calc((1 - #{$line-height}) * 0.5em);
+    }
+}
+
+input {
+    all: unset;
+    &[type=text] {
+        background-color: rgba(255, 255, 255, 0.10);
+        padding: 12px;
+        border: 2px solid rgba(255, 255, 255);
+        &:focus-visible {
+            background-color: rgba(255, 255, 255, 0.20);
+            border-color: rgba(255, 255, 255);
+        }
     }
 }

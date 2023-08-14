@@ -22,10 +22,12 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 4px;
         align-items: center;
+        min-width: 64px;
+        min-height: 210px;
         h2 {
             font-size: 12pt;
+            
         }
         .icon {
             height: 32px;
@@ -35,6 +37,7 @@
 
     @media (min-width: style.$small) {
         .wrapper {
+            min-width: 96px;
             h2 {
                 font-size: 14pt;
             }
@@ -51,8 +54,8 @@
                 font-size: 18pt;
             }
             .icon {
-                height: 96px;
-                width: 96px;
+                height: 64px;
+                width: 64px;
             }
         }
     }

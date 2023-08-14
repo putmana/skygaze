@@ -1,42 +1,46 @@
-import { API_KEY } from '$env/static/private';
-import testData from '$lib/weather/data.json' assert {type: 'json'};
+import { goto } from '$app/navigation';
+import { DEFAULT_LOCATION, stringifyLocation } from '$lib/location/location';
+import { getLocation } from '$lib/location/location.server.js';
+import { redirect, type Actions } from '@sveltejs/kit';
 
-// Setting DEBUG to true will make Stargaze pull data 
-// from a local JSON file rather than the OpenWeatherMap API.
-// This will (hopefully) prevent me from accidentally 
-// setting my wallet on fire.
-const DEBUG = false;
+export const actions = {
+    queryLocation: async({request, cookies}) => {
+        const formInfo = await request.formData();
+        const data = await getLocation(formInfo.get('query')?.toString() ?? "billings").then(result => {
+            // If OWM returns no results, throw an error stating as such
+            if (result.length === 0) throw new Error("No results found")
 
-// Billings, MT
-const DEFAULT_LOCATION = "45.78,-108.50";
+            // If OWM returns an error code, return the code and error message
+            if (result.cod) throw new Error("Error " + result.cod + ": " +result.message)
 
-// Arguments for API URL
-const BASE_LAT = "&lat=";
-const BASE_LON = "&lon=";
-const EXCLUDE = "&exclude=minutely,alerts";
+            // If no errors are found, set the location cookie and redirect to the weather page
+            cookies.set('location', result[0].lat + "," + result[0].lon, { path: "/" })
+            return {
+                success: true,
+                data: result
+            }
 
-// The base API URL
-const BASE_API_URL = "https://api.openweathermap.org/data/3.0/onecall?appid=" + API_KEY + EXCLUDE;
+        }).catch(err => {
+            console.log(err)
+            return {
+                success: false,
+                data: err.message
+            }
+        })
 
+        console.log(data);
+        return data;
+    },
 
+    setLocation: async({ request, cookies }) => {
+        const formInfo = await request.formData();
 
-export async function load({ cookies }) {
-    // Return local data if DEBUG is enabled
-    if (DEBUG) return testData;
+        const location = formInfo.get('location')?.toString() ?? stringifyLocation(DEFAULT_LOCATION);
+        console.log(location)
 
-    // Get the user's location cookie, or set it to the default if there is no location cookie
-    cookies.set('location', cookies.get('location') ?? DEFAULT_LOCATION, { path: "/" })
-    const LOCATION = cookies.get('location') ?? DEFAULT_LOCATION;
+        cookies.set('location', location);
 
-    // Parse the location cookie 
-    const LAT = LOCATION.split(",")[0]
-    const LON = LOCATION.split(",")[1]
- 
-    // Build the query
-    const API_URL = BASE_API_URL + BASE_LAT + LAT + BASE_LON + LON
+        throw redirect(303, '/weather');
+    }
 
-    // Run the query and return the results
-    const data = await fetch(API_URL)
-    return (data.json())
-
-}
+} satisfies Actions;
