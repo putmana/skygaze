@@ -60,7 +60,7 @@
             align-items: end;
 
             .logo {
-                font-size: 32pt;
+                font-size: 24pt;
                 font-weight: normal;
                 margin: 24px;
                 line-height: 1;
@@ -72,7 +72,7 @@
             display: flex;
             flex-direction: column;
             flex: 5;
-            width: 400px;
+            width: 300px;
             .search {
                 display: flex;
                 input {
@@ -135,6 +135,13 @@
                     }
                     
                 }
+            }
+        }
+    }
+    @media (min-width: style.$small) {
+        main {
+            .forms {
+                width: 400px;
             }
         }
     }

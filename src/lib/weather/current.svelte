@@ -60,9 +60,11 @@ import { convertTemp, getIcon, type Weather } from "./weather";
         min-height: 60vh;
         .location {
             display: flex;
+            justify-content: center;
             align-items: center;
             gap: 12px;
-            margin-bottom: 16px;
+            margin-top: 8px;
+            margin-bottom: 32px;
             .icon {
                 width: 24px;
                 height: 24px;
@@ -71,9 +73,14 @@ import { convertTemp, getIcon, type Weather } from "./weather";
                 color: white;
                 margin: 0;
                 font-size: 12pt;
+                text-decoration: none;
+                &:hover {
+                    text-decoration: underline;
+                }
                 &:focus-visible {
+                    text-decoration: underline;
                     outline: 2px dashed white;          
-                    outline-offset: 4px;
+                    outline-offset: 4px     ;
                 }
             }
         }
