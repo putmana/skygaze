@@ -24,7 +24,6 @@
         flex-direction: column;
         align-items: center;
         min-width: 64px;
-        min-height: 210px;
         h2 {
             font-size: 12pt;
             

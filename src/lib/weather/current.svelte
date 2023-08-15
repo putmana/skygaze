@@ -3,13 +3,21 @@
 import { convertTemp, getIcon, type Weather } from "./weather";
 
     export let weather: Weather;
+    export let location = "";
 </script>
 
 <div class="wrapper">
-    
+    <section class="location">
+        <img class="icon" src="icons/misc_location.png">
+        <a href="/" class="name">
+            {location}
+        </a>
+    </section>
     <section class="header">
+        
         <img class="icon" src={getIcon(weather.code, weather.isNight)}>
         <div class="info">
+            
             <h2 class="desc">
                 {weather.description}
             </h2>
@@ -50,13 +58,32 @@ import { convertTemp, getIcon, type Weather } from "./weather";
         flex-direction: column;
         flex-grow: 1;
         min-height: 60vh;
-        
+        .location {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            .icon {
+                width: 24px;
+                height: 24px;
+            }
+            .name {
+                color: white;
+                margin: 0;
+                font-size: 12pt;
+                &:focus-visible {
+                    outline: 2px dashed white;          
+                    outline-offset: 4px;
+                }
+            }
+        }
         .header {
             display: flex;
             flex-direction: row;
+            
             .icon {
-                height: 128px;
-                width: 128px;
+                height: 96px;
+                width: 96px;
             }
             .info {
                 display: flex;
@@ -107,6 +134,12 @@ import { convertTemp, getIcon, type Weather } from "./weather";
 
     @media (min-width: style.$small) {
         .wrapper {
+            .header {
+                .icon {
+                    height: 128px;
+                    width: 128px;
+                }
+            }
             .body {
                 .detail {
                     .label {
@@ -122,6 +155,9 @@ import { convertTemp, getIcon, type Weather } from "./weather";
             justify-content: space-evenly;
             align-items: center;
             margin: 48px;
+            .location {
+                margin: 0;
+            }
             .header {
                 gap: 24px;
                 .icon {

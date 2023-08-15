@@ -8,30 +8,37 @@
     export let form: ActionData;
 
     let success = false;
+    let selected = "";
 
 </script>
 
 <main>
     <section class="header">
-        <h1>Choose Location</h1>
+        <h1 class="logo">Choose Location</h1>
     </section>
     <section class="forms">
 
         <form class="search" method="POST" action="?/queryLocation">
-            <input type="text" id="query" name="query" placeholder="City or Region" required>
-            <input type="submit">
+            <input class="search-text" type="text" id="query" name="query" placeholder="City or Region" required>
         </form>
+        
         {#if form?.success === true}
-            <form method="POST" action="?/setLocation">
-                {#each form?.data as result, index}
-                <input class="radio" type="radio" id={index.toString()} name="location" value={stringifyLocation({name: formatName(result.name, result.country, result.state), lat: result.lat, lon: result.lon})} required>
-                <label for={index.toString()}>{formatName(result.name, result.country, result.state)}</label>
-                {/each}
-                <input class="button" type="submit" value="Choose Location">
-                
-            </form>
+
+        <form class="results" method="POST" action="?/setLocation">
+            {#each form?.data as result, index}
+            <input class="result-option-radio" type="radio" id={index.toString()} name="location" value={stringifyLocation({name: formatName(result.name, result.country, result.state), lat: result.lat, lon: result.lon})} required>
+            <label class="result-option" for={index.toString()}>
+                {formatName(result.name, result.country, result.state)}
+            </label>
+
+            {/each}
+            <input class="result-submit" type="submit" value="Choose Location">
+        </form>
+
         {:else if form?.success === false}
-            <h3>{form.data}</h3>
+
+        <h3>{form.data}</h3>
+
         {/if}
     </section>
 </main>
@@ -45,70 +52,87 @@
         justify-content: center;
         height: 100vh;
         align-items: center;
+
         .header {
-            
-            flex: 3;
             display: flex;
+            flex: 3;
             justify-content: center;
             align-items: end;
-            h1 {
+
+            .logo {
                 font-size: 32pt;
                 font-weight: normal;
-                margin: 0;
+                margin: 24px;
                 line-height: 1;
                 @include style.lhCrop(1.5);
-                margin: 24px;
-            }
-            img {
-                height: 96px;
-                width: 96px;
             }
         }
+
         .forms {
+            display: flex;
+            flex-direction: column;
             flex: 5;
-            form {
-                width: 400px;
+            width: 400px;
+            .search {
                 display: flex;
-                flex-direction: column;
-                input[type=submit] {
+                input {
                     padding: 12px;
-                    background-color: rgba(255, 255, 255, 0.10);
                     border: 2px solid white;
-                    text-align: center;
-                    &:hover {
-                        background-color: rgba(255, 255, 255, 0.50);
-                    }
-                }
-                &.search {
-                    flex-direction: row;
-                    input[type=text] {
+
+                    &.search-text {
+                        background-color: transparent;
                         flex-grow: 1;
-                        border-right: none;
+                        &:focus-visible {
+                            outline: 2px dashed white;
+                            outline-offset: -4px;       
+                        }
                     }
-                    
-                }
-                
-            }
-            input {
-                &.radio {
-                    visibility: hidden;
-                }
-                &.radio:checked + label {
-                    background-color: rgba(255, 255, 255, 0.4);
+                    &.search-submit {
+                        border-left: none;
+                    }
                 }
             }
-            label {
-                padding: 12px;
-                padding-top: 16px;
-                padding-bottom: 16px;
-                box-sizing: border-box;
-                text-align: center;
-                line-height: 1;
-                border-left: 2px solid white;
-                border-right: 2px solid white;
-                @include style.lhCrop(1.5);
-                &:hover {
-                    background-color: rgba(255, 255, 255, 20%);
+
+            .results {
+                display: flex;
+                flex-direction: column; 
+                border-top: none;
+                .result-option-radio {  
+                    opacity: 0;
+                    position: fixed;
+                    &:checked + .result-option {
+                        background-color: rgba(255, 255, 255, 0.4);
+                        font-weight: bold;
+                    }
+                    &:focus-visible + .result-option {
+                        outline: 2px dashed white;
+                        outline-offset: -4px;
+                    }
+                }
+                .result-option {
+                    padding: 12px;
+                    padding-bottom: 14px;
+                    text-align: center;
+                    border-left: 2px solid white;
+                    border-right: 2px solid white       ;
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.2);
+                    }
+                }
+                .result-submit {
+                    background-color: rgba(255, 255, 255, 0.2);
+                    padding: 12px;
+                    padding-bottom: 14px;
+                    border: 2px solid white;        
+                    text-align: center;
+                    box-sizing: border-box;
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.4);
+                    }
+                    &:focus-visible {
+                        outline: 2px dashed white;
+                        outline-offset: -4px;           
+                    }
                     
                 }
             }

@@ -11,7 +11,7 @@
 
     export let data;
 
-    let name = data.name
+    let name = data.name;
     let now = data.weather.current;
     let night = (now.dt > now.sunrise && now.dt < now.sunset) ? false : true;
     let clouds = (now.clouds > 50)
@@ -62,7 +62,7 @@
 <div class="wrapper" class:night class:clouds>
     <div class="content">
         <section class="current">
-            <Current weather={current}/>
+            <Current weather={current} location={name}/>
             <div class="hourly">
                 {#each hourly as hour}
                     <Hourly weather={hour} hour={2}/>
@@ -113,7 +113,18 @@
         display: flex;
         flex: 1;
         flex-direction: column;
-
+        
+        .location {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            img {
+                width: 36px;
+                height: 36px;
+            }
+        }
         .hourly {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
