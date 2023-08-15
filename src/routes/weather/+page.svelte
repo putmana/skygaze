@@ -1,13 +1,10 @@
 <script lang="ts">
 	import Daily from "$lib/weather/daily.svelte";
-	import DayForecast from "$lib/weather/daily.svelte";
 	import Hourly from "$lib/weather/hourly.svelte";
-	import HourForecast from "$lib/weather/hourly.svelte";
     import { tempUnit } from "$lib/stores.js";
 	import Current from "$lib/weather/current.svelte";
 
-    import { checkIfNight, formatDay, formatTime, type Weather } from "$lib/weather/weather";
-	import Searchbox from "$lib/location/searchbox.svelte";
+    import { checkIfNight, convertTemp, formatDay, formatTime, type Weather } from "$lib/weather/weather";
 
     export let data;
 
@@ -15,16 +12,17 @@
     let now = data.weather.current;
     let night = (now.dt > now.sunrise && now.dt < now.sunset) ? false : true;
     let clouds = (now.clouds > 50)
+    let timezone = data.weather.timezone_offset;
 
     let current: Weather = {
         description: now.weather[0].description,
         code: now.weather[0].id,
         temp: now.temp,
         feelsLike: now.feels_like,
-        isNight: checkIfNight(now.dt, now.sunrise,now.sunset),
+        isNight: checkIfNight(now.dt + timezone, now.sunrise,now.sunset),
         unit: $tempUnit,
-        sunrise: formatTime(now.sunrise),
-        sunset: formatTime(now.sunset),
+        sunrise: formatTime(now.sunrise, timezone),
+        sunset: formatTime(now.sunset, timezone),
         clouds: now.clouds + "%",
         humidity: now.humidity + "%"
     }
@@ -36,7 +34,7 @@
             description: hour.weather[0].description,
             code: hour.weather[0].id,
             temp: hour.temp,
-            time: formatTime(hour.dt, false),
+            time: formatTime(hour.dt, timezone, false),
             isNight: checkIfNight(hour.dt, now.sunrise, now.sunset),
             unit: $tempUnit
         })
@@ -50,15 +48,19 @@
             code: day.weather[0].id,
             temp: day.temp.max,
             lowTemp: day.temp.min,
-            day: formatDay(day.dt),
+            day: formatDay(day.dt, timezone),
             isNight: false,
             unit: $tempUnit
         })
     }
 
+    console.log(data);
+
     
 </script>
-
+<svelte:head>
+    <title>Weather in {name?.split(",")[0]}, {name?.split(",")[1]} | Stargaze</title>
+</svelte:head>
 <div class="wrapper" class:night class:clouds>
     <div class="content">
         <section class="current">
