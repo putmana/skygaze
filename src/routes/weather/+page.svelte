@@ -9,6 +9,8 @@
 
     export let data;
 
+    console.log(data);
+
     let name = data.name;
     let now = data.weather.current;
     let night = (now.dt > now.sunrise && now.dt < now.sunset) ? false : true;
@@ -28,19 +30,6 @@
         humidity: now.humidity + "%"
     }
     
-    let hourly: Weather[] = [];
-    for (let i = 1; i < 25; i++) {
-        let hour = data.weather.hourly[i];
-        hourly.push({
-            description: hour.weather[0].description,
-            code: hour.weather[0].id,
-            temp: hour.temp,
-            time: formatTime(hour.dt, timezone, false),
-            isNight: checkIfNight(hour.dt, now.sunrise, now.sunset),
-            unit: $tempUnit
-        })
-    }
-
     let daily: Weather[] = [];
     for (let i = 0; i < 8; i++) {
         let day = data.weather.daily[i];
@@ -54,6 +43,31 @@
             unit: $tempUnit
         })
     }
+
+    let hourly: Weather[] = [];
+    for (let i = 1; i < 25; i++) {
+        let hour = data.weather.hourly[i];
+
+        let sunrise = now.sunrise;
+        let sunset = now.sunset;
+        let tomorrow = data.weather.daily[1];
+
+        if (hour.dt + timezone >= tomorrow.dt) {
+            sunrise = tomorrow.sunrise;
+            sunset = tomorrow.sunset;
+        }
+        
+        hourly.push({
+            description: hour.weather[0].description,
+            code: hour.weather[0].id,
+            temp: hour.temp,
+            time: formatTime(hour.dt, timezone, false),
+            isNight: checkIfNight(hour.dt, sunrise, sunset),
+            unit: $tempUnit
+        })
+    }
+
+
 
     
 </script>
