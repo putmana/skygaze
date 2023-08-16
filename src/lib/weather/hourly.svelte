@@ -49,12 +49,15 @@
 
     @media (min-width: style.$xlarge) {
         .wrapper {
-            h2 {
+            .hour {
                 font-size: 18pt;
             }
             .icon {
                 height: 64px;
                 width: 64px;
+            }
+            .temp {
+                font-size: 16pt;
             }
         }
     }

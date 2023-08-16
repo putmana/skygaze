@@ -20,7 +20,7 @@
         code: now.weather[0].id,
         temp: now.temp,
         feelsLike: now.feels_like,
-        isNight: checkIfNight(now.dt, now.sunrise, now.sunset, timezone),
+        isNight: checkIfNight(now.dt, now.sunrise, now.sunset),
         unit: $tempUnit,
         sunrise: formatTime(now.sunrise, timezone),
         sunset: formatTime(now.sunset, timezone),
@@ -36,13 +36,13 @@
             code: hour.weather[0].id,
             temp: hour.temp,
             time: formatTime(hour.dt, timezone, false),
-            isNight: checkIfNight(hour.dt, now.sunrise, now.sunset, timezone),
+            isNight: checkIfNight(hour.dt, now.sunrise, now.sunset),
             unit: $tempUnit
         })
     }
 
     let daily: Weather[] = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 8; i++) {
         let day = data.weather.daily[i];
         daily.push({
             description: day.weather[0].description,
@@ -60,6 +60,7 @@
 <svelte:head>
     <title>Weather in {name?.split(",")[0]}, {name?.split(",")[1]} | Stargaze</title>
 </svelte:head>
+
 <div class="wrapper" class:night class:clouds>
     <div class="content">
         <section class="current">
@@ -86,7 +87,6 @@
     @use "/src/lib/style.scss";
     .wrapper {
         overflow-x: scroll;
-        height: 100vh;
         scroll-snap-type: x mandatory;
         background-color: #3aa1d5;
         &.clouds {
@@ -110,12 +110,10 @@
 
     .current {
         scroll-snap-align: start;
-        overflow-y: scroll;
         display: flex;
         flex: 1;
         flex-direction: column;
-        
-        
+        overflow-y: scroll;
         .location {
             display: flex;
             flex-direction: row-reverse;
@@ -127,6 +125,7 @@
                 height: 36px;
             }
         }
+
         .hourly {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -141,19 +140,12 @@
     .forecast {
         scroll-snap-align: start;
         display: flex;
-        flex: 1;
         flex-direction: column;
+        flex: 1;
         background-color: rgba(0, 0, 0, 50%);
     }
     @media (min-width: style.$medium) {
-        .current {       
-            .hourly {
-                grid-template-columns: repeat(6, 1fr);
-            }
-        }
-    }
-
-    @media (min-width: style.$large) {
+        
         .wrapper {
             overflow-x: hidden;
             scroll-snap-type: none;
@@ -161,12 +153,22 @@
         .content {
             width: 100vw;
         }
-        .current {
-            
+        .current {       
+            .hourly {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
         .forecast {
             flex-grow: 0;
             flex-basis: auto;
+        }
+    }
+
+    @media (min-width: style.$large) {
+        .current {
+            .hourly {
+                grid-template-columns: repeat(6, 1fr);
+            }
         }
     }
 

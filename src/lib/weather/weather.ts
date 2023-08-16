@@ -39,7 +39,7 @@ export type Weather = {
     humidity?: string;
 }
 
-export function checkIfNight(time: number, sunrise: number, sunset: number, timezone: number) {
+export function checkIfNight(time: number, sunrise: number, sunset: number) { 
     return (time > sunrise && time < sunset) ? false : true;
 }
 
@@ -83,7 +83,7 @@ export function formatTime(secs: number, timezone: number, showMinutes = true): 
 }
 
 export function formatDay(secs: number, timezone: number): string {
-    const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+    const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
     // Convert OWM API seconds to milliseconds and create a Date object, and get the day of the week
     const day = new Date((secs + timezone) * 1000).getDay()

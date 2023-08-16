@@ -21,7 +21,10 @@ const BASE_API_URL = "https://api.openweathermap.org/data/3.0/onecall?appid=" + 
 
 export async function load({ cookies }) {
     // Return local data if DEBUG is enabled
-    if (DEBUG) return testData;
+    if (DEBUG) return {
+        name: "TEST MODE ! DEBUG ! TEST MODE",
+        weather: testData
+    }
 
     // Get the user's location cookie, or set it to the default if there is no location cookie
     const LOCATION_STRING = cookies.get('location') ?? stringifyLocation(DEFAULT_LOCATION);
