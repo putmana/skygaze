@@ -9,8 +9,6 @@
 
     export let data;
 
-    console.log(data);
-
     let name = data.name;
     let now = data.weather.current;
     let night = (now.dt > now.sunrise && now.dt < now.sunset) ? false : true;
@@ -56,7 +54,7 @@
             sunrise = tomorrow.sunrise;
             sunset = tomorrow.sunset;
         }
-        
+
         hourly.push({
             description: hour.weather[0].description,
             code: hour.weather[0].id,
