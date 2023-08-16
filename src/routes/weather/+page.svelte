@@ -4,7 +4,8 @@
     import { tempUnit } from "$lib/stores.js";
 	import Current from "$lib/weather/current.svelte";
 
-    import { checkIfNight, convertTemp, formatDay, formatTime, type Weather } from "$lib/weather/weather";
+
+    import { checkIfNight, formatDay, formatTime, type Weather } from "$lib/weather/weather";
 
     export let data;
 
@@ -19,7 +20,7 @@
         code: now.weather[0].id,
         temp: now.temp,
         feelsLike: now.feels_like,
-        isNight: checkIfNight(now.dt + timezone, now.sunrise,now.sunset),
+        isNight: checkIfNight(now.dt, now.sunrise, now.sunset, timezone),
         unit: $tempUnit,
         sunrise: formatTime(now.sunrise, timezone),
         sunset: formatTime(now.sunset, timezone),
@@ -35,7 +36,7 @@
             code: hour.weather[0].id,
             temp: hour.temp,
             time: formatTime(hour.dt, timezone, false),
-            isNight: checkIfNight(hour.dt, now.sunrise, now.sunset),
+            isNight: checkIfNight(hour.dt, now.sunrise, now.sunset, timezone),
             unit: $tempUnit
         })
     }
@@ -53,8 +54,6 @@
             unit: $tempUnit
         })
     }
-
-    console.log(data);
 
     
 </script>
@@ -116,6 +115,7 @@
         flex: 1;
         flex-direction: column;
         
+        
         .location {
             display: flex;
             flex-direction: row-reverse;
@@ -133,7 +133,7 @@
             max-width: 100vw;
             gap: 8px;
             padding-top: 16px;
-            padding-bottom: 16px;
+            padding-bottom: 120px;
             background-color: rgba(0, 0, 0, 20%);
         }
     }

@@ -39,7 +39,7 @@ export type Weather = {
     humidity?: string;
 }
 
-export function checkIfNight(time: number, sunrise: number, sunset: number) {
+export function checkIfNight(time: number, sunrise: number, sunset: number, timezone: number) {
     return (time > sunrise && time < sunset) ? false : true;
 }
 

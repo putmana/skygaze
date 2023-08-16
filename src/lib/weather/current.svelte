@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Searchbox from "$lib/location/searchbox.svelte";
+	import { tempUnit } from "$lib/stores";
 import { convertTemp, getIcon, type Weather } from "./weather";
 
     export let weather: Weather;

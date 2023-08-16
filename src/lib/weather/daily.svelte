@@ -9,12 +9,12 @@
     <h2 class="day">
         {weather.day}
     </h2>
+    <img class="icon" src={getIcon(weather.code, false, true)}>
     <span class="temps">
         <h3 class="high">{convertTemp(weather.temp, weather.unit)}&deg{weather.unit}</h3>
         <h3 class="low">{convertTemp(weather.lowTemp ?? 0, weather.unit)}&deg{weather.unit}</h3>
     </span>
     <h4 class="desc">{weather.description}</h4>
-    <img class="icon" src={getIcon(weather.code, false, true)}>
 </div>
 
 <style lang="scss">

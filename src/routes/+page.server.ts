@@ -21,14 +21,12 @@ export const actions = {
             }
 
         }).catch(err => {
-            console.log(err)
             return {
                 success: false,
                 data: err.message
             }
         })
 
-        console.log(data);
         return data;
     },
 
@@ -36,7 +34,6 @@ export const actions = {
         const formInfo = await request.formData();
 
         const location = formInfo.get('location')?.toString() ?? stringifyLocation(DEFAULT_LOCATION);
-        console.log(location)
 
         cookies.set('location', location);
 
