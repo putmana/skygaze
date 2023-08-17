@@ -8,10 +8,15 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
-	type Geocode = {
-		name: string,
+	type Coordinates = {
 		lat: number,
 		lon: number
+	}
+
+	type Locale = {
+		id: string,
+		name: string,
+		coords: Coordinates
 	}
 	
 }

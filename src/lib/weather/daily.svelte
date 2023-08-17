@@ -14,7 +14,6 @@
         <h3 class="high">{convertTemp(weather.temp, weather.unit)}&deg{weather.unit}</h3>
         <h4 class="low">L: {convertTemp(weather.lowTemp ?? 0, weather.unit)}&deg{weather.unit}</h4>
     </span>
-        
 </article>
 
 <style lang="scss">

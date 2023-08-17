@@ -23,6 +23,14 @@ export enum WeatherIcon {
     ERROR = "error.png"
 }
 
+// Background colors that change depending on weather and time
+export enum SkyColor {
+    DAY_CLEAR = "#3aa1d5",
+    DAY_CLOUDS = "#7c8c9a",
+    NIGHT_CLEAR = "#262b49",
+    NIGHT_CLOUDS = "#2d2e34"
+}
+
 export type Weather = {
     description: string;
     code: number;

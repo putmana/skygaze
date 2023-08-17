@@ -1,23 +1,21 @@
 <script lang="ts">
-	import { tempUnit } from "$lib/stores";
-import { convertTemp, getIcon, type Weather } from "./weather";
-
+	import Searchbox from "$lib/components/searchbox.svelte";
+import { tempUnit } from "$lib/stores";
+    import { convertTemp, getIcon, type Weather } from "./weather";
     export let weather: Weather;
     export let location = "";
 </script>
 
+<section class="controls">
+    <Searchbox/>
+</section>
 <div class="wrapper">
-    <section class="location">
-        <img class="icon" src="icons/misc_location.png">
-        <a href="/" class="name">
-            {location}
-        </a>
-    </section>
+    
+
     <section class="header">
         
         <img class="icon" src={getIcon(weather.code, weather.isNight)}>
         <div class="info">
-            
             <h2 class="desc">
                 {weather.description}
             </h2>
@@ -52,19 +50,30 @@ import { convertTemp, getIcon, type Weather } from "./weather";
 
 <style lang="scss">
     @use '/src/lib/style.scss';
+    .controls {
+        display: flex;
+        align-items: center;
+        min-height: 64px;
+        padding-left: 16px;
+        padding-right: 16px;
+
+    }
     .wrapper {
         display: flex;
-        margin: 24px;
+        padding: 24px;
+        box-sizing: border-box;
         flex-direction: column;
         flex-grow: 1;
-        min-height: 60vh;
+        min-height: calc(60vh);
+        
         .location {
+
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 12px;
             margin-top: 8px;
-            margin-bottom: 32px;
+            margin-bottom: 16px;
             .icon {
                 width: 24px;
                 height: 24px;
@@ -72,7 +81,7 @@ import { convertTemp, getIcon, type Weather } from "./weather";
             .name {
                 color: white;
                 margin: 0;
-                font-size: 12pt;
+                font-size: 16pt;
                 text-decoration: none;
                 &:hover {
                     text-decoration: underline;
@@ -161,7 +170,7 @@ import { convertTemp, getIcon, type Weather } from "./weather";
         .wrapper {
             justify-content: space-evenly;
             align-items: center;
-            margin: 48px;
+            padding: 48px;
             .location {
                 margin: 0;
             }

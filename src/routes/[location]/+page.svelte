@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Daily from "$lib/weather/daily.svelte";
 	import Hourly from "$lib/weather/hourly.svelte";
-    import { tempUnit } from "$lib/stores.js";
+    import { tempUnit, color } from "$lib/stores.js";
 	import Current from "$lib/weather/current.svelte";
 
-
-    import { checkIfNight, formatDay, formatTime, type Weather } from "$lib/weather/weather";
+    import { checkIfNight, formatDay, formatTime, SkyColor, type Weather } from "$lib/weather/weather";
+	import { goto } from "$app/navigation";
 
     export let data;
 
@@ -15,6 +15,11 @@
     let clouds = (now.clouds > 50)
     let timezone = data.weather.timezone_offset;
 
+    $color = SkyColor.DAY_CLEAR
+    if (clouds) $color = SkyColor.DAY_CLOUDS
+    if (night) $color = SkyColor.NIGHT_CLEAR
+    if (clouds && night) $color = SkyColor.NIGHT_CLOUDS
+    
     let current: Weather = {
         description: now.weather[0].description,
         code: now.weather[0].id,
@@ -36,7 +41,7 @@
             code: day.weather[0].id,
             temp: day.temp.max,
             lowTemp: day.temp.min,
-            day: formatDay(day.dt, timezone),
+            day: (i === 0) ? "Today" : formatDay(day.dt, timezone), // Show "Today" on first daily forecast
             isNight: false,
             unit: $tempUnit
         })
@@ -64,16 +69,13 @@
             unit: $tempUnit
         })
     }
-
-
-
     
 </script>
 <svelte:head>
     <title>Weather in {name?.split(",")[0]}, {name?.split(",")[1]} | Stargaze</title>
 </svelte:head>
 
-<div class="wrapper" class:night class:clouds>
+<div class="wrapper">
     <div class="content">
         <section class="current">
             <Current weather={current} location={name}/>
@@ -100,17 +102,6 @@
     .wrapper {
         overflow-x: scroll;
         scroll-snap-type: x mandatory;
-        background-color: #3aa1d5;
-        &.clouds {
-            background-color: #7c8c9a;
-        }
-        &.night {
-            background-color: #262b49;
-            &.clouds {
-                background-color: #2d2e34;
-            }
-        }
-
         
     }
 
@@ -126,17 +117,6 @@
         flex: 1;
         flex-direction: column;
         overflow-y: scroll;
-        .location {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: center;
-            align-items: center;
-            gap: 4px;
-            img {
-                width: 36px;
-                height: 36px;
-            }
-        }
 
         .hourly {
             display: grid;

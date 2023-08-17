@@ -25,12 +25,14 @@
 		"sass": "^1.64.2",
 		"svelte": "^4.0.5",
 		"svelte-check": "^3.4.3",
+		"sveltekit-superforms": "^1.5.3",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
 		"vite": "^4.4.2"
 	},
 	"type": "module",
 	"dependencies": {
-		"dotenv": "^16.3.1"
+		"dotenv": "^16.3.1",
+		"zod": "^3.22.1"
 	}
 }

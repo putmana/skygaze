@@ -1,31 +1,59 @@
 import { API_KEY } from "$env/static/private";
-import testData from '$lib/location/data.json' assert {type: 'json'};
 
-
-const DEBUG = false;
-
-const LIMIT = 5;
-
-const BASE_API_LOC_URL = "http://api.openweathermap.org/geo/1.0/direct?limit=" + LIMIT + "&appid=" + API_KEY + "&q="
-const BASE_API_ZIP_URL = "http://api.openweathermap.org/geo/1.0/zip?appid=" + API_KEY + "&zip="
-
-export async function getLocation(query: string) {
-
-    if (DEBUG) return testData;
-
-    const API_URL = BASE_API_LOC_URL + query
-    const data = await fetch(API_URL).then((response) => {
-        return response.json()
-    })
-
-    return data
+export interface LocationResult {
+    id: string,
+    name: string,
+    coords: Coordinates
 }
 
-export async function getZip(query: string) {
-    const API_URL = BASE_API_ZIP_URL + query
-    const data = await fetch(API_URL).then((response) => {
-        return response.json()
-    })
 
-    return data
+// <============ DIRECT GEOCODING ============>
+const URL_DIRECT = "https://geocoding-api.open-meteo.com/v1/search?language=en&format=json"
+const ARG_QUERY = "&name="
+const ARG_COUNT = "&count="
+
+const LIMIT = 10;
+
+// Uses the Open-Meteo API to find a location based on a query string 
+export async function lookupLocation(query: string, count = LIMIT): Promise<LocationResult[]> {
+    const API_URL = URL_DIRECT + ARG_QUERY + query + ARG_COUNT + count
+    
+    const res = await fetch(API_URL)
+    const data = await res.json()
+    const results: LocationResult[] = []
+
+    data.results.forEach((result: any) => {
+        results.push({
+            id: result.id,
+            name: result.name + ", " + result.admin1,
+            coords: {
+                lat: result.latitude,
+                lon: result.longitude
+            }
+        })
+    });
+
+    return results;
+}
+
+
+// <============ ID-BASED GEOCODING ============>
+const URL_ID = "https://geocoding-api.open-meteo.com/v1/get?id="
+
+// Uses the Open-Meteo API to find the location based on the location's ID
+export async function getLocationByID(id: string): Promise<LocationResult> {
+    const API_URL = URL_ID + id
+
+    const res = await fetch(API_URL)
+    const data = await res.json()
+    const result: LocationResult = {
+        id: data.id,
+        name: data.name,
+        coords: {
+            lat: data.latitude,
+            lon: data.longitude
+        }
+    }
+
+    return result;
 }

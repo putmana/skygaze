@@ -1,34 +1,56 @@
-const DELIMITOR = "_&_";
-const LOC_LEN = 3
+import { error } from "@sveltejs/kit";
 
-export const DEFAULT_LOCATION = {
-    lat: 45.78749,
-    lon: -108.49607,
-    name: "Billings, Montana, US",
+// <============ DIRECT GEOCODING ============>
+const URL_DIRECT = "https://geocoding-api.open-meteo.com/v1/search?language=en&format=json"
+const ARG_QUERY = "&name="
+const ARG_COUNT = "&count="
+
+const LIMIT = 10;
+
+// Uses the Open-Meteo API to find a location based on a query string 
+export async function lookupLocation(query: string, count = LIMIT): Promise<Locale[]> {
+    const API_URL = URL_DIRECT + ARG_QUERY + query + ARG_COUNT + count
+    if (query.length < 2) throw new Error("Name be at least two characters long")
+
+    const res = await fetch(API_URL)
+    const data = await res.json()
+    const results: Locale[] = []
+
+    data.results.forEach((result: any) => {
+        results.push({
+            id: result.id,
+            name: result.name + ", " + result.admin1,
+            coords: {
+                lat: result.latitude,
+                lon: result.longitude
+            }
+        })
+    });
+
+    return results;
 }
 
+// <============ ID-BASED GEOCODING ============>
+const URL_ID = "https://geocoding-api.open-meteo.com/v1/get?id="
 
-// Will turn coordinates and location name into a single string
-// I.E., lat=40.5 lon=110.0 name="foobar, earth" -> "40.5&110.0&foobar, earth"
-export function stringifyLocation(loc: {lat: number, lon: number, name: string}): string {
-    return loc.lat + DELIMITOR + loc.lon + DELIMITOR + loc.name;
-}
+// Uses the Open-Meteo API to find the location based on the location's ID
+export async function getLocationByID(id: string) {
+    const API_URL = URL_ID + id
 
-// Will unpack a location string
-export function parseLocationString(loc: string) {
-    const broken = loc.split(DELIMITOR);
+    const res = await fetch(API_URL)
+    const data = await res.json()
+    if (data.error) throw error(404, {
+        message: data.reason
+    });
 
-    // If parsing fails for some reason, return the default info
-    if (broken.length !== LOC_LEN) return DEFAULT_LOCATION
-
-    return {
-        lat: broken[0],
-        lon: broken[1],
-        name: broken[2]
+    const result: Locale = {
+        id: data.id,
+        name: data.name,
+        coords: {
+            lat: data.latitude,
+            lon: data.longitude
+        }
     }
-}
 
-export function formatName(city: string, country: string, state?: string) {
-    if (state !== undefined) return city + ", " + state + ", " + country
-    return city + ", " + country
+    return result;
 }

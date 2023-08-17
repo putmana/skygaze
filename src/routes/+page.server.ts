@@ -1,43 +1,34 @@
-import { goto } from '$app/navigation';
-import { DEFAULT_LOCATION, stringifyLocation } from '$lib/location/location';
-import { getLocation } from '$lib/location/location.server.js';
-import { redirect, type Actions } from '@sveltejs/kit';
+import { lookupLocation, type LocationResult } from "$lib/location/location.server";
+import { z } from 'zod';
+import { superValidate } from 'sveltekit-superforms/server';
+import { fail, type Actions } from "@sveltejs/kit";
+
+const querySchema = z.object({
+    query: z.string().min(2)
+})
+
+export async function load(event) {
+    // Set up the form stores with Superforms
+    const form = await superValidate(event, querySchema)
+    const results: LocationResult[] = []
+    return {
+        form,
+    }
+}
 
 export const actions = {
-    queryLocation: async({request, cookies}) => {
-        const formInfo = await request.formData();
-        const data = await getLocation(formInfo.get('query')?.toString() ?? "billings").then(result => {
-            // If OWM returns no results, throw an error stating as such
-            if (result.length === 0) throw new Error("No results found")
+    default: async (event) => {
+        // Validate the form with Superforms
+        const form = await superValidate(event, querySchema)
+        const query = form.data.query
+        console.log(query)
+        // Look up the location
+        const results = await lookupLocation(query).catch(error => {
+            return fail(400, {
+                error: "No results found"
+            })
+        });
 
-            // If OWM returns an error code, return the code and error message
-            if (result.cod) throw new Error("Error " + result.cod + ": " +result.message)
-
-            // If no errors are found, set the location cookie and redirect to the weather page
-            cookies.set('location', result[0].lat + "," + result[0].lon, { path: "/" })
-            return {
-                success: true,
-                data: result
-            }
-
-        }).catch(err => {
-            return {
-                success: false,
-                data: err.message
-            }
-        })
-
-        return data;
-    },
-
-    setLocation: async({ request, cookies }) => {
-        const formInfo = await request.formData();
-
-        const location = formInfo.get('location')?.toString() ?? stringifyLocation(DEFAULT_LOCATION);
-
-        cookies.set('location', location);
-
-        throw redirect(303, '/weather');
+        return { form, results }
     }
-
-} satisfies Actions;
+} satisfies Actions
