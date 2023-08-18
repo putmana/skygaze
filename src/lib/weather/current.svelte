@@ -1,36 +1,41 @@
 <script lang="ts">
+	import { invalidateAll } from "$app/navigation";
 	import Searchbox from "$lib/components/searchbox.svelte";
-import { tempUnit } from "$lib/stores";
-    import { convertTemp, getIcon, type Weather } from "./weather";
+	import Switch from "$lib/components/switch.svelte";
+    import { useFahrenheit } from "$lib/stores";
+    import { convertTemp, getIcon, getUnit, type Weather } from "./weather";
     export let weather: Weather;
     export let location = "";
+
+    $: unit = getUnit($useFahrenheit)
+
 </script>
 
 <section class="controls">
     <Searchbox/>
+    <Switch labelLeft = "°C" labelRight = "°F" bind:active={$useFahrenheit}/>
 </section>
 <div class="wrapper">
-    
-
     <section class="header">
         
         <img class="icon" src={getIcon(weather.code, weather.isNight)}>
         <div class="info">
+            <h2 class="location">
+                {location}
+            </h2>
+            
+            <h2 class="temp">
+                {convertTemp(weather.temp, unit)}&deg{unit}
+            </h2>
             <h2 class="desc">
                 {weather.description}
             </h2>
-            <h2 class="temp">
-                {convertTemp(weather.temp, weather.unit)}&deg{weather.unit}
-            </h2>
-            <h3 class="feel">
-                Feels like {convertTemp(weather.feelsLike ?? 0, weather.unit)}&deg{weather.unit}
-            </h3>
         </div>
     </section>
     <section class="body">
         <span class="detail">
-            <h4 class="label">Clouds:</h4>
-            <h4 class="data">{weather.clouds}</h4>
+            <h4 class="label">Feels Like:</h4>
+            <h4 class="data">{convertTemp(weather.feelsLike ?? 0, unit)}&deg{unit}</h4>
         </span>
         <span class="detail">
             <h4 class="label">Humidity:</h4>
@@ -53,6 +58,7 @@ import { tempUnit } from "$lib/stores";
     .controls {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         min-height: 64px;
         padding-left: 16px;
         padding-right: 16px;
@@ -61,38 +67,12 @@ import { tempUnit } from "$lib/stores";
     .wrapper {
         display: flex;
         padding: 24px;
+        padding-top: 12px;
         box-sizing: border-box;
         flex-direction: column;
         flex-grow: 1;
-        min-height: calc(60vh);
+        min-height: calc(63vh);
         
-        .location {
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            margin-top: 8px;
-            margin-bottom: 16px;
-            .icon {
-                width: 24px;
-                height: 24px;
-            }
-            .name {
-                color: white;
-                margin: 0;
-                font-size: 16pt;
-                text-decoration: none;
-                &:hover {
-                    text-decoration: underline;
-                }
-                &:focus-visible {
-                    text-decoration: underline;
-                    outline: 2px dashed white;          
-                    outline-offset: 4px     ;
-                }
-            }
-        }
         .header {
             display: flex;
             flex-direction: row;
@@ -108,7 +88,7 @@ import { tempUnit } from "$lib/stores";
                 justify-content: center;
                 gap: 20px;
                 text-align: end;
-                .desc {
+                .location {
                     font-size: 14pt;
                     margin: 0;
                     text-transform: capitalize;
@@ -118,6 +98,13 @@ import { tempUnit } from "$lib/stores";
                 .temp {
                     margin: 0;
                     font-size: 30pt;
+                    line-height: 1;
+                    @include style.lhCrop(1.5);
+                }
+                .desc {
+                    font-size: 14pt;
+                    margin: 0;
+                    text-transform: capitalize;
                     line-height: 1;
                     @include style.lhCrop(1.5);
                 }
@@ -168,13 +155,15 @@ import { tempUnit } from "$lib/stores";
 
     @media (min-width: style.$large) {
         .wrapper {
-            justify-content: space-evenly;
+            justify-content: center;
             align-items: center;
             padding: 48px;
             .location {
                 margin: 0;
             }
             .header {
+                flex-grow: 1;
+                align-items: center;
                 gap: 24px;
                 .icon {
                     height: 192px;
@@ -195,9 +184,9 @@ import { tempUnit } from "$lib/stores";
             }
             .body {
                 flex-direction: row;
-                flex-grow: 0;
-                align-items: end;
-                gap: 64px;
+                align-items: center;
+                gap: 96px;
+                flex-grow: 2;
                 .detail {
                     flex-direction: column;
                     text-align: center;

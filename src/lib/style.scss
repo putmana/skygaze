@@ -41,8 +41,29 @@ $xlarge: 1300px;
 
 input {
     all: unset;
+    $bg-color: rgba(0, 0, 0, 20%);
+    $bg-color-focus: rgba(0, 0, 0, 50%);
+    $ph-color: rgba(255, 255, 255, 20%);
+    $border-color: rgba(255, 255, 255, 80%);
+
+    &[type=text] {
+        padding: 14px;
+        box-sizing: border-box;
+        background-color: $bg-color;
+        transition: all 0.2s ease;
+        
+        &::placeholder {
+            color: $ph-color;
+        }
+
+        &:focus, &:focus-visible {
+            background-color: $bg-color-focus;
+        }
+
+    }
 }
 
 h1, h2, h3, h4, h5 {
     font-weight: normal !important;
 }
+

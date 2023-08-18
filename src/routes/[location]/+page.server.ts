@@ -14,6 +14,7 @@ export async function load({ params }) {
 
     return {
         name: LOCATION.name,
+        fullName: LOCATION.fullName,
         weather: WEATHER
     }
 }

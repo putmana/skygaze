@@ -1,7 +1,10 @@
 <script lang="ts">
-	import { convertTemp, getIcon, type Weather } from "./weather";
+	import { useFahrenheit } from "$lib/stores";
+	import { convertTemp, getIcon, getUnit, type Weather } from "./weather";
 
 	export let weather: Weather;
+
+    $: unit = getUnit($useFahrenheit);
 
 </script>
 <article class="wrapper">
@@ -11,8 +14,8 @@
         <h4 class="desc">{weather.description}</h4>
     </span>
     <span class="temps">
-        <h3 class="high">{convertTemp(weather.temp, weather.unit)}&deg{weather.unit}</h3>
-        <h4 class="low">L: {convertTemp(weather.lowTemp ?? 0, weather.unit)}&deg{weather.unit}</h4>
+        <h3 class="high">{convertTemp(weather.temp, unit)}&deg{unit}</h3>
+        <h4 class="low">L: {convertTemp(weather.lowTemp ?? 0, unit)}&deg{unit}</h4>
     </span>
 </article>
 

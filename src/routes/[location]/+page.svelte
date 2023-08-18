@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Daily from "$lib/weather/daily.svelte";
 	import Hourly from "$lib/weather/hourly.svelte";
-    import { tempUnit, color } from "$lib/stores.js";
+    import { useFahrenheit, color } from "$lib/stores.js";
 	import Current from "$lib/weather/current.svelte";
 
-    import { checkIfNight, formatDay, formatTime, SkyColor, type Weather } from "$lib/weather/weather";
-	import { goto } from "$app/navigation";
+    import { checkIfNight, formatDay, formatTime, getUnit, SkyColor, type Weather } from "$lib/weather/weather";
+	import { invalidateAll } from "$app/navigation";
 
     export let data;
 
@@ -26,7 +26,7 @@
         temp: now.temp,
         feelsLike: now.feels_like,
         isNight: checkIfNight(now.dt, now.sunrise, now.sunset),
-        unit: $tempUnit,
+        unit: getUnit($useFahrenheit),
         sunrise: formatTime(now.sunrise, timezone),
         sunset: formatTime(now.sunset, timezone),
         clouds: now.clouds + "%",
@@ -43,7 +43,7 @@
             lowTemp: day.temp.min,
             day: (i === 0) ? "Today" : formatDay(day.dt, timezone), // Show "Today" on first daily forecast
             isNight: false,
-            unit: $tempUnit
+            unit: getUnit($useFahrenheit)
         })
     }
 
@@ -66,7 +66,7 @@
             temp: hour.temp,
             time: formatTime(hour.dt, timezone, false),
             isNight: checkIfNight(hour.dt, sunrise, sunset),
-            unit: $tempUnit
+            unit: getUnit($useFahrenheit)
         })
     }
     
@@ -109,6 +109,10 @@
         display: flex;
         width: calc(2 * 100vw);
         height: 100vh;
+
+        &::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
     }
 
     .current {

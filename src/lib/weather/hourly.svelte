@@ -1,8 +1,11 @@
 <script lang="ts">
-	import { convertTemp, formatTime, getIcon, type Weather } from "./weather";
+	import { useFahrenheit } from "$lib/stores";
+	import { convertTemp, formatTime, getIcon, getUnit, type Weather } from "./weather";
 
     export let hour: number;
     export let weather: Weather;
+
+    $: unit = getUnit($useFahrenheit);
 
 </script>
 
@@ -12,7 +15,7 @@
     </h2>
     <img class="icon" src={getIcon(weather.code, weather.isNight, true)} alt={getIcon(weather.code, weather.isNight, true)}>
     <h2 class="temp">
-        {convertTemp(weather.temp, weather.unit)}&deg{weather.unit}
+        {convertTemp(weather.temp, unit)}&deg{unit}
     </h2>
 </div>
 

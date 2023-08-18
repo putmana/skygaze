@@ -15,7 +15,8 @@ declare global {
 
 	type Locale = {
 		id: string,
-		name: string,
+		name: string, // Billings, MT
+		fullName: string, // Billings, Montana, United States
 		coords: Coordinates
 	}
 	

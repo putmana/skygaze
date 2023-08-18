@@ -39,12 +39,16 @@ export type Weather = {
     lowTemp?: number;
     time?: string;
     day?: string;
-    unit: "K" | "C" | "F";
+    unit: "C" | "F";
     isNight: boolean;
     sunrise?: string;
     sunset?: string;
     clouds?: string;
     humidity?: string;
+}
+
+export function getUnit(useFahrenheit: boolean): "F" | "C" {
+    return (useFahrenheit) ? "F" : "C";
 }
 
 export function checkIfNight(time: number, sunrise: number, sunset: number) { 
@@ -62,6 +66,8 @@ export function getIcon(weatherCode: number, night: boolean, low = false): strin
 
     return path;
 }
+
+
 
 // If showMinutes = true, time will return as 12:34 AM. 
 // If showMinutes = false, time it will return 12 AM.
