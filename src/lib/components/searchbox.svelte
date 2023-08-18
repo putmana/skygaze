@@ -5,6 +5,8 @@
 
     let placeholder = "City or ZIP code";
 
+    // Determines whether or not the search box is visible
+    let active = false;
 
     let query = "";
 
@@ -19,8 +21,7 @@
 
     $: resultPromise = lookupLocation(query)
     
-    // Determines whether or not the search box is visible
-    let active = false;
+    
 
     function openSearch() {
         active = true;

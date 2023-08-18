@@ -11,7 +11,7 @@
     <slot/>
 </body>
 
-
+ 
 <style lang="scss">
     body {
         transition: background-color 0.8s ease-in-out;
