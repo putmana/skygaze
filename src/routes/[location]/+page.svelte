@@ -62,7 +62,7 @@
     
 </script>
 <svelte:head>
-    <title>Weather in {name?.split(",")[0]}, {name?.split(",")[1]} | Stargaze</title>
+    <title>Weather in {name?.split(",")[0]}, {name?.split(",")[1]} | Skygaze</title>
 </svelte:head>
 
 <div class="wrapper">
