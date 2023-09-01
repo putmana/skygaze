@@ -7,11 +7,11 @@ export async function load({ params }) {
 
     // Look up the location and get all of the relvant information
     const LOCATION = await getLocationByID(LOCATION_ID)
-
+    
     // Fetch the weather at the location
     const WEATHER = await getWeather(LOCATION.coords.lat, LOCATION.coords.lon)
-
-
+    
+    
     return {
         name: LOCATION.name,
         fullName: LOCATION.fullName,

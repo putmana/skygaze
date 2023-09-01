@@ -47,6 +47,7 @@ export type Weather = {
     humidity?: string;
 }
 
+
 export function getUnit(useFahrenheit: boolean): "F" | "C" {
     return (useFahrenheit) ? "F" : "C";
 }
@@ -67,14 +68,12 @@ export function getIcon(weatherCode: number, night: boolean, low = false): strin
     return path;
 }
 
-
-
 // If showMinutes = true, time will return as 12:34 AM. 
 // If showMinutes = false, time it will return 12 AM.
-export function formatTime(secs: number, timezone: number, showMinutes = true): string {
+export function formatTime(secs: number, timezoneSecs: number, showMinutes = true): string {
     
     // Convert OWM API seconds to milliseconds and create a Date object
-    const time = new Date((secs + timezone) * 1000);
+    const time = new Date((secs + timezoneSecs) * 1000);
     
     const hours = time.getUTCHours();
 
@@ -96,11 +95,11 @@ export function formatTime(secs: number, timezone: number, showMinutes = true): 
     return formattedHours + ":" + formattedMinutes + " " + suffix;
 }
 
-export function formatDay(secs: number, timezone: number): string {
+export function formatDay(secs: number, timezoneSecs: number): string {
     const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
     // Convert OWM API seconds to milliseconds and create a Date object, and get the day of the week
-    const day = new Date((secs + timezone) * 1000).getDay()
+    const day = new Date((secs + timezoneSecs) * 1000).getDay()
 
     // Return the day of the week
     return DAYS[day];

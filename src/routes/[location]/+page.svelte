@@ -4,14 +4,13 @@
     import { useFahrenheit, color } from "$lib/stores.js";
 	import Current from "$lib/weather/current.svelte";
 
-    import { checkIfNight, formatDay, formatTime, getUnit, SkyColor, type Weather } from "$lib/weather/weather";
-	import { invalidateAll } from "$app/navigation";
+    import { formatDay, formatTime, getUnit, SkyColor, type Weather } from "$lib/weather/weather";
 
     export let data;
 
     let name = data.name;
     let now = data.weather.current;
-    let night = (now.dt > now.sunrise && now.dt < now.sunset) ? false : true;
+    let night = now.weather[0].icon.includes("n"); // The OWM API icon has "n" in it if it is meant to be nighttime
     let clouds = (now.clouds > 50)
     let timezone = data.weather.timezone_offset;
 
@@ -25,10 +24,10 @@
         code: now.weather[0].id,
         temp: now.temp,
         feelsLike: now.feels_like,
-        isNight: checkIfNight(now.dt, now.sunrise, now.sunset),
+        isNight: night,
         unit: getUnit($useFahrenheit),
-        sunrise: formatTime(now.sunrise, timezone),
-        sunset: formatTime(now.sunset, timezone),
+        sunrise: now.sunrise !== undefined ? formatTime(now.sunrise, timezone) : "N/A",
+        sunset: now.sunset !== undefined ? formatTime(now.sunset, timezone) : "N/A",
         clouds: now.clouds + "%",
         humidity: now.humidity + "%"
     }
@@ -51,21 +50,12 @@
     for (let i = 1; i < 25; i++) {
         let hour = data.weather.hourly[i];
 
-        let sunrise = now.sunrise;
-        let sunset = now.sunset;
-        let tomorrow = data.weather.daily[1];
-
-        if (hour.dt + timezone >= tomorrow.dt) {
-            sunrise = tomorrow.sunrise;
-            sunset = tomorrow.sunset;
-        }
-
         hourly.push({
             description: hour.weather[0].description,
             code: hour.weather[0].id,
             temp: hour.temp,
             time: formatTime(hour.dt, timezone, false),
-            isNight: checkIfNight(hour.dt, sunrise, sunset),
+            isNight: hour.weather[0].icon.includes("n"),
             unit: getUnit($useFahrenheit)
         })
     }
