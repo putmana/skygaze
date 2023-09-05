@@ -8,16 +8,16 @@ declare global {
 		// interface Platform {}
 	}
 	type Coordinates = {
-		lat: number;
-		lon: number;
-	};
+		lat: number
+		lon: number
+	}
 
 	type Locale = {
-		id: string;
-		name: string; // Billings, MT
-		fullName: string; // Billings, Montana, United States
-		coords: Coordinates;
-	};
+		id: string
+		name: string // Billings, MT
+		fullName: string // Billings, Montana, United States
+		coords: Coordinates
+	}
 }
 
-export {};
+export {}
