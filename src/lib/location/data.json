@@ -1,1 +1,38 @@
-[{"name":"Billings","local_names":{"en":"Billings","he":"בילינגס","ru":"Биллингс","uk":"Біллінгс"},"lat":45.7874957,"lon":-108.49607,"country":"US","state":"Montana"},{"name":"Billings","lat":37.0675544,"lon":-93.5521411,"country":"US","state":"Missouri"},{"name":"Billings","lat":36.5289239,"lon":-97.4439362,"country":"US","state":"Oklahoma"},{"name":"Billings","lat":43.8497467,"lon":-84.3472238,"country":"US","state":"Michigan"},{"name":"Billings","lat":38.8573079,"lon":-81.4037319,"country":"US","state":"West Virginia"}]
+[
+	{
+		"name": "Billings",
+		"local_names": { "en": "Billings", "he": "בילינגס", "ru": "Биллингс", "uk": "Біллінгс" },
+		"lat": 45.7874957,
+		"lon": -108.49607,
+		"country": "US",
+		"state": "Montana"
+	},
+	{
+		"name": "Billings",
+		"lat": 37.0675544,
+		"lon": -93.5521411,
+		"country": "US",
+		"state": "Missouri"
+	},
+	{
+		"name": "Billings",
+		"lat": 36.5289239,
+		"lon": -97.4439362,
+		"country": "US",
+		"state": "Oklahoma"
+	},
+	{
+		"name": "Billings",
+		"lat": 43.8497467,
+		"lon": -84.3472238,
+		"country": "US",
+		"state": "Michigan"
+	},
+	{
+		"name": "Billings",
+		"lat": 38.8573079,
+		"lon": -81.4037319,
+		"country": "US",
+		"state": "West Virginia"
+	}
+]

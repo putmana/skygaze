@@ -5,65 +5,68 @@ $large: 1100px;
 $xlarge: 1300px;
 
 @media (max-width: calc($small - 1px)) {
-    .hide-at-xs {
-        display: none !important;
-    }
+	.hide-at-xs {
+		display: none !important;
+	}
 }
 
 @media (max-width: calc($medium - 1px)) {
-    .hide-at-sm {
-        display: none !important;
-    }
+	.hide-at-sm {
+		display: none !important;
+	}
 }
 
 @media (max-width: calc($large - 1px)) {
-    .hide-at-md {
-        display: none !important;
-    }
+	.hide-at-md {
+		display: none !important;
+	}
 }
 
 @media (max-width: calc($xlarge - 1px)) {
-    .hide-at-lg {
-        display: none !important;
-    }
+	.hide-at-lg {
+		display: none !important;
+	}
 }
 
 // Removes the top and bottom spacing from text
 @mixin lhCrop($line-height) {
-    &::before {
-        content: '';
-        display: block;
-        height: 0;
-        width: 0;
-        margin-top: calc((1 - #{$line-height}) * 0.5em);
-    }
+	&::before {
+		content: "";
+		display: block;
+		height: 0;
+		width: 0;
+		margin-top: calc((1 - #{$line-height}) * 0.5em);
+	}
 }
 
 input {
-    all: unset;
-    $bg-color: rgba(0, 0, 0, 20%);
-    $bg-color-focus: rgba(0, 0, 0, 50%);
-    $ph-color: rgba(255, 255, 255, 20%);
-    $border-color: rgba(255, 255, 255, 80%);
+	all: unset;
+	$bg-color: rgba(0, 0, 0, 20%);
+	$bg-color-focus: rgba(0, 0, 0, 50%);
+	$ph-color: rgba(255, 255, 255, 20%);
+	$border-color: rgba(255, 255, 255, 80%);
 
-    &[type=text] {
-        padding: 14px;
-        box-sizing: border-box;
-        background-color: $bg-color;
-        transition: all 0.2s ease;
-        
-        &::placeholder {
-            color: $ph-color;
-        }
+	&[type="text"] {
+		padding: 14px;
+		box-sizing: border-box;
+		background-color: $bg-color;
+		transition: all 0.2s ease;
 
-        &:focus, &:focus-visible {
-            background-color: $bg-color-focus;
-        }
+		&::placeholder {
+			color: $ph-color;
+		}
 
-    }
+		&:focus,
+		&:focus-visible {
+			background-color: $bg-color-focus;
+		}
+	}
 }
 
-h1, h2, h3, h4, h5 {
-    font-weight: normal !important;
+h1,
+h2,
+h3,
+h4,
+h5 {
+	font-weight: normal !important;
 }
-

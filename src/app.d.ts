@@ -2,24 +2,22 @@
 // for information about these interfaces
 declare global {
 	namespace App {
-		
 		// interface Error {}
 		// interface Locals {}
 		// interface PageData {}
 		// interface Platform {}
 	}
 	type Coordinates = {
-		lat: number,
-		lon: number
-	}
+		lat: number;
+		lon: number;
+	};
 
 	type Locale = {
-		id: string,
-		name: string, // Billings, MT
-		fullName: string, // Billings, Montana, United States
-		coords: Coordinates
-	}
-	
+		id: string;
+		name: string; // Billings, MT
+		fullName: string; // Billings, Montana, United States
+		coords: Coordinates;
+	};
 }
 
 export {};
